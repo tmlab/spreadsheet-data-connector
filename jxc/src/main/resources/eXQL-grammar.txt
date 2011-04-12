@@ -1,0 +1,19 @@
+query 					::=		select-clause from-clause where-clause?
+#select-clause
+select-clause			::=		'SELECT' (value-expression | function)+
+	value-expression	::=		cell-address | constant
+	cell-address		::=		'$'[0-9]+(cell-value|cell-style)?
+	cell-value			::=		'.value'('.'('string'|'numerical'|'date'))?
+	cell-style			::=		'.style.'('foreground'|'background')
+	constant			::=		color-constant
+	color-constant		::=		'cell.color.'('RED'|'BLUE'|'BLACK'|'GREEN')
+	function			::=		function-name '(' (value-expression ( ',' value-expression)* ')'
+	function-name		::=		'concat'
+#from-clause
+from-clause				::=		'FROM' sheetname '(' ( [0-9]+ (( ',' [0-9]+)*|('TO' [0-9]+))? ')' 
+#where-clause			
+where-clause			::=		boolean-expression
+	boolean-expression	::=		boolean-expression ('AND'|'OR') boolean-expression | boolean-primitive
+	boolean-primitive	::=		comparison
+	comparison			::=		value-expression operator value-expression
+	operator			::=		'=='|'!='|'<='|'<'|'>'|'>='|'=~'

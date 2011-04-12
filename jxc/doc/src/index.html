@@ -1,0 +1,852 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.4.5" />
+<title>Xlsx Integration</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 2px solid silver;
+}
+
+div.exampleblock > div.content {
+  border-left: 2px solid silver;
+  padding: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 2px solid silver;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){generateToc(2)}
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, October 2006. License: GPL */
+
+function getText(el) {
+  var text = "";
+  for (var i = el.firstChild; i != null; i = i.nextSibling) {
+    if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+      text += i.data;
+    else if (i.firstChild != null)
+      text += getText(i);
+  }
+  return text;
+}
+
+function TocEntry(el, text, toclevel) {
+  this.element = el;
+  this.text = text;
+  this.toclevel = toclevel;
+}
+
+function tocEntries(el, toclevels) {
+  var result = new Array;
+  var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+  // Function that scans the DOM tree for header elements (the DOM2
+  // nodeIterator API would be a better technique but not supported by all
+  // browsers).
+  var iterate = function (el) {
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+        var mo = re.exec(i.tagName)
+        if (mo)
+          result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+        iterate(i);
+      }
+    }
+  }
+  iterate(el);
+  return result;
+}
+
+// This function does the work. toclevels = 1..4.
+function generateToc(toclevels) {
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementsByTagName("body")[0], toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "toc" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    document.getElementById("header").removeChild(toc);
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="header">
+<h1>Xlsx Integration</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>The used trademarks are reserved by their owners.</p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Excel Integration based on the Java Integration Framework on top of the MaJorToM topic maps engine. The Integration Framework provides a virtual topic map accessing the underlying real document on demand. The document will be access in the moment of requesting some information of the topic map. By using the topic maps paradigm, construct using the same identity or being equal will be merged to one information resource.</p></div>
+<div class="paragraph"><p>The integration based on a schema information defined by the user. The schema specifies the way of mapping a information resource like a Excel cell to a topic map construct like a topic name. The schema also provides the possibility to define additional information about the domain, like topic types or scoping information.</p></div>
+</div>
+<h2 id="_mapping_definition">2. Mapping Definition</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The mapping between the topic map and the Excel document is split into two parts to enable the reuse of schema information for different bindings. In this context this means, the reuse of a topic schema for different cell regions and / or sheets. Because of that the mapping is split into the schema definition and the binding to the real Excel document. The mapping is defined as XML document.</p></div>
+</div>
+<h2 id="_schema_definition">3. Schema Definition</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The schema definition will be represented by the <em>schema</em> XML node and can contains a <em>topics</em> and an <em>associations</em> XML node.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               schema
+Children:               topics?, associations?
+Attributes:             -</tt></pre>
+</div></div>
+<h3 id="_topic_schema_definition">3.1. Topic Schema Definition</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A so called <em>topic</em> represents exact one subject of the real world and will be identified by at least one identity. The identity of a topic can be a so called subject-identifier, subject-locator or item-identifier.</p></div>
+<div class="paragraph"><p>A topic schema will be represented by the <em>topic</em> XML node and contains any information of characteristics, identities, types and supertypes of this topic. A topic schema entry can be a reference by using the <em>ref</em> attribute.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               topic
+Child Of:               topics
+Children:               subject-identifier*, subject-locator*, item-identifier*, type*, supertype*, name*, occurrence*
+Attributes:             id | ref</tt></pre>
+</div></div>
+<div class="paragraph"><p><strong>Please note:</strong> Referenced topic schema entries does not contain any child nodes or an <em>id</em> attribute.</p></div>
+<div class="paragraph"><p>In case of different Excel formats a topic schema entry can be row or block oriented.</p></div>
+<h4 id="_row_oriented_topic_schema">3.1.1. Row Oriented Topic Schema</h4>
+<div class="paragraph"><p>A row oriented topic schema entry used for topics represented by only one row of the Excel document, except the merged caused overlapping of different rows. In the context of a row-oriented topic schema entry the <em>block</em> attribute is forbidden and all child nodes must not contain a <em>row</em> attribute.</p></div>
+<h4 id="_block_oriented_topic_schema">3.1.2. Block Oriented Topic Schema</h4>
+<div class="paragraph"><p>A block oriented topic schema entry used for topics represented by a cell-region of the Excel document and not only by one row. The block will be represented by the <em>block</em> attribute containing a pattern translated by the integration layer to extract the topic blocks dynamically from underlying Excel sheet.</p></div>
+<div class="paragraph"><p>Possible constant values for the block attributes are:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">border-top</p></td>
+<td align="left" valign="top"><p class="table">Blocks are started by a cell with a border on the top.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">border-bottom</p></td>
+<td align="left" valign="top"><p class="table">Blocks are started by a cell with a border on the bottom.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">border-left</p></td>
+<td align="left" valign="top"><p class="table">Blocks are started by a cell with a border on the left.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">border-right</p></td>
+<td align="left" valign="top"><p class="table">Blocks are started by a cell with a border on the right.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">content</p></td>
+<td align="left" valign="top"><p class="table">Blocks are started by a non-empty cell.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_type_schema_entry">3.2. Type Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The type schema entry represents one type of the topic definition or can be used as embed topic definition for name or occurrence types.</p></div>
+<h4 id="_reference_type_schema_entry">3.2.1. Reference Type Schema Entry</h4>
+<div class="paragraph"><p>A references type schema entry only contains the attribute <em>ref</em> referencing to an other topic schema entry, in the schema file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               type
+Child Of:               topic
+Children:               -
+Attributes:             ref</tt></pre>
+</div></div>
+<h4 id="_embed_type_schema_entry">3.2.2. Embed Type Schema Entry</h4>
+<div class="paragraph"><p>An embed type schema entry can be used to generate the type information in context of a name or occurrence construct. The embed type definition is a special topic schema entry. Which does not contains embed topics.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               type
+Child Of:               name | occurrence
+Children:               subject-identifier*, subject-locator*, item-identifier*, type*, supertype*, name*, occurrence*
+Attributes:             id</tt></pre>
+</div></div>
+<h3 id="_supertype_schema_entry">3.3. Supertype Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The supertype schema entry represents one supertype of the topic definition and can only be a reference to another topic schema entry.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               supertype
+Child Of:               topic
+Children:               -
+Attributes:             ref</tt></pre>
+</div></div>
+<h3 id="_subject_identifier_schema_entry">3.4. Subject-Identifier Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A subject-identifier schema entry will be represented by the <em>subject-identifier</em> XML node and defines a so called subject-identifier of the topic.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               subject-identifier
+Child Of:               topic | type
+Children:               -
+Attributes:             value? | query? | column? | row? | last-row?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The subject-identifier represents an IRI value. The value of the IRI can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. If the value isn&#8217;t a absolute IRI, the base-locator of the topic map will be used to create an absolute IRI. The third possibility to extract the value of the subject-identifier will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<h3 id="_subject_locator_schema_entry">3.5. Subject-Locator Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A subject-locator schema entry will be represented by the <em>subject-locator</em> XML node and defines a so called subject-locator of the topic.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               subject-locator
+Child Of:               topic | type
+Children:               -
+Attributes:             value? | query? | column? | row? | last-row?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The subject-locator represents an IRI value. The value of the IRI can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. If the value isn&#8217;t a absolute IRI, the base-locator of the topic map will be used to create an absolute IRI. The third possibility to extract the value of the subject-locator will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<h3 id="_item_identifier_schema_entry">3.6. Item-Identifier Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>An item-identifier schema entry will be represented by the <em>item-identifier</em> XML node and defines a so called item-identifier of the topic.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               item-identifier
+Child Of:               topic | type
+Children:               -
+Attributes:             value? | query? | column? | row? | last-row?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The item-identifier represents an IRI value. The value of the IRI can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. If the value isn&#8217;t a absolute IRI, the base-locator of the topic map will be used to create an absolute IRI. The third possibility to extract the value of the item-identifier will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<h3 id="_topic_name_schema_entry">3.7. Topic Name Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A topic name schema entry will be represented by the <em>name</em> XML node and defines a name of the topic.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               name
+Child Of:               topic | type
+Children:               variant* | theme* | type?
+Attributes:             value? | query? | column? | row? | last-row? | type-ref?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The topic name represents a name of the real world subject represented by the topic. The value of a name has to be a string literal. The value of a name can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. The third possibility to extract the value of the subject-locator will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>A topic name may have a type represented by a topic. The type can be addressed by the <em>type-ref</em> attribute references to another topic schema entry or an embed topic schema entry represented by the <em>type</em> node. The <em>type</em> node can be a reference too, but can also be a dynamic definition of a type depends on the underlying Excel sheet. If the schema entry does not specify a type the default type of names will be used.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<div class="paragraph"><p>One of the fundamental concepts of the topic maps datamodel is the scoping concept. Some constructs can be scoped by a set of themes representing a view in which context the name is valid for the given topic. A quite simple example can be a language theme, specifying a name as valid in the context of a specific language like German. The scope is defined by a set of themes represented by the <em>theme</em> XML nodes.</p></div>
+<div class="paragraph"><p>In contrast to that names can also have variants, representing same values with syntactical changes or representation in other media formats.</p></div>
+<h3 id="_occurrence_schema_entry">3.8. Occurrence Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>An occurrence schema entry will be represented by the <em>occurrence</em> XML node and defines a characteristic of the topic.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               occurrence
+Child Of:               topic | type
+Children:               theme* | type?
+Attributes:             value? | query? | column? | row? | last-row? | type-ref? | datatype?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The occurrence represents a characteristics of the real world subject represented by the topic. The value of a occurrence can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. The third possibility to extract the value of the subject-locator will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>An occurrence must have a type represented by a topic. The type can be addressed by the <em>type-ref</em> attribute references to another topic schema entry or an embed topic schema entry represented by the <em>type</em> node. The <em>type</em> node can be a reference too, but can also be a dynamic definition of a type depends on the underlying Excel sheet. If the schema entry does not define a type an error will occur.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<div class="paragraph"><p>One of the fundamental concepts of the topic maps datamodel is the scoping concept. Some constructs can be scoped by a set of themes representing a view in which context the occurrence is valid for the given topic. A quite simple example can be a numerical precision theme. The scope is defined by a set of themes represented by the <em>theme</em> XML nodes.</p></div>
+<div class="paragraph"><p>The <em>datatype</em> attribute specify the datatype of the occurrence value. Normally the XSD datatypes are used as values for the attribute.</p></div>
+<h3 id="_variant_schema_entry">3.9. Variant Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A variant schema entry will be represented by the <em>variant</em> XML node.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               variant
+Child Of:               name
+Children:               theme+
+Attributes:             value? | query? | column? | row? | last-row? | datatype?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The variant represents a name variant with syntactical changes or representation in other media formats  than the name itself. The value of a variant can be a fixed value by using the <em>value</em> attribute. If the <em>column</em> attribute is used, the value of cell addressed relatively by the given column index will be used. The third possibility to extract the value of the subject-locator will be the <em>query</em> attribute contains an eXql query, which will be executed relatively on the bound Excel sheet.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> Only one of the three attributes <em>value</em>, <em>column</em> or <em>query</em> is allowed.</p></div>
+<div class="paragraph"><p>If the parent topic schema entry is block topic schema, the <em>row</em> attribute defines the first row of block which should be used for the <em>column</em> or <em>query</em> attribute.
+The <em>last-row</em> attribute is optional and only allowed in the context of a topic block schema entry. It defines the last row of the block which should be used for the <em>column</em> or <em>query</em> attribute. If the constant <em>dynamic</em> is used as value of <em>last-row</em> attribute, the integration layer set them to the maximum row index of the current topic block.</p></div>
+<div class="paragraph"><p>One of the fundamental concepts of the topic maps datamodel is the scoping concept. Some constructs can be scoped by a set of themes representing a view in which context the variant is valid for the given topic. A quite simple example can be a language theme, specifying a variant as valid in the context of a specific language like German.The scope is defined by a set of themes represented by the <em>theme</em> XML nodes.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> A variant node must contain at least one <em>theme</em> node which is restricted by the Topic Maps Data Model (TMDM).</p></div>
+<div class="paragraph"><p>The <em>datatype</em> attribute specify the datatype of the variant value. Normally the XSD datatypes are used as values for the attribute.</p></div>
+<h3 id="_theme_schema_entry">3.10. Theme Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The theme schema entry represents a theme of scoped constructs. The concept of scopes can be used the create different views of the data, like different languages or rights.</p></div>
+<h4 id="_reference_theme_schema_entry">3.10.1. Reference Theme Schema Entry</h4>
+<div class="paragraph"><p>A references theme schema entry only contains the attribute <em>ref</em> referencing to an other topic schema entry, in the schema file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               theme
+Child Of:               name | occurrence | variant | association
+Children:               -
+Attributes:             ref</tt></pre>
+</div></div>
+<h4 id="_embed_type_schema_entry_2">3.10.2. Embed Type Schema Entry</h4>
+<div class="paragraph"><p>An embed theme schema entry can be used to generate the type information in context of a scoped construct. The embed theme definition is a special topic schema entry. Which does not contains embed topics.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               theme
+Child Of:               name | occurrence | variant | association
+Children:               subject-identifier*, subject-locator*, item-identifier*, type*, supertype*, name*, occurrence*
+Attributes:             id</tt></pre>
+</div></div>
+<h3 id="_association_schema_entry">3.11. Association Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Associations are the second top level constructs of a topic map and represent a relationship between subjects of the real world. Every topic can play different roles within an association.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               association
+Child Of:               associations
+Children:               role+, theme*
+Attributes:             id, type-ref</tt></pre>
+</div></div>
+<div class="paragraph"><p>An association is defined by the <em>association</em> XML node and its contained <em>role</em> nodes.</p></div>
+<div class="paragraph"><p>The <em>type-ref</em> attribute defines the type of the association and is a reference to another topic schema entry of this schema document. The <em>id</em> attribute is mandatory and will be used for specify the binding of this association.</p></div>
+<div class="paragraph"><p>A role must contain at least one role defining a playing topic in a role of a specific type. The roles are represented by the <em>role</em> XML node.</p></div>
+<div class="paragraph"><p>One of the fundamental concepts of the topic maps datamodel is the scoping concept. Some constructs can be scoped by a set of themes representing a view in which context the association is valid for the given topic. The scope is defined by a set of themes represented by the <em>theme</em> XML nodes.</p></div>
+<h3 id="_role_schema_entry">3.12. Role Schema Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A role is only valid in the context of a specific association definition and defines the playing topic and the role type.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               role
+Child Of:               association
+Children:               -
+Attributes:             type-ref, player-ref?, column? | value? | query? , identity?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <em>type-ref</em> attribute defines the type of the role and is a reference to another topic schema entry of this schema document.</p></div>
+<div class="paragraph"><p>The playing topic of a specific instance of the parent association can be defined in two different ways.</p></div>
+<div class="paragraph"><p>The first possibility is the identity usage, which bounds the topic by extract an identity by using the <em>value</em> , <em>column</em> or <em>query</em> attribute. The identity is used to find the corresponding topic. The <em>identity</em> attributes is an enumeration attribute only supports the values <em>item-identifier</em>, <em>subject-identifier</em> and <em>subject-locator</em>. The attribute value defines the kind of identity used to extract the topic.</p></div>
+<div class="paragraph"><p>The second possibility is the dynamic referenced binding using the <em>player-ref</em> attribute. This possibility is only possible if the topic and association binding are overlapping each other, which means that the referenced topic schema of the player and the association schema entry must have at least one binding addresses the same sheet and cell region. In this case the identities of the topic schema definition referenced by the <em>player-ref</em> attribute is used to find the player topic.</p></div>
+</div>
+<h2 id="_binding">4. Binding</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The binding is represented by the <em>binding</em> XML node and contains a set of topic and association bindings, which uses the ids of the schema entries and addresses a cell region within the Excel document. The cell region is used to create real instances of the topic or association defined by the schema entry.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               binding
+Child Of:               jli-xlsx
+Children:               topic-binding*, association-binding*
+Attributes:             url?</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <em>url</em> attribute can be used to define the location of the XLSX file in the context of the running application.</p></div>
+<h3 id="_topic_binding">4.1. Topic Binding</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               topic-binding
+Child Of:               binding
+Children:               entry*
+Attributes:             schema-ref, sheet?, row?, last-row?, start?</tt></pre>
+</div></div>
+<div class="paragraph"><p>A topic binding is represented by the <em>topic-binding</em> XML node and bind a schema definition represented by the <em>schema-ref</em> attribute to a cell region.</p></div>
+<div class="paragraph"><p>The cell region is defined by a set of attributes. The <em>sheet</em> attribute contains the name of the specific Excel sheet to address.
+The <em>row</em> attribute defines the first row of the cell region in the context of the sheet.
+The <em>last-row</em> attribute is optional and defines the last row of the cell region. If the attribute is missing, the value will be the last row of the Excel sheet.
+The <em>start</em> attribute defines the first column of the cell region in the context of the sheet. The attribute value is used translate the relative column values of the schema entry ( <em>column</em> and <em>query</em> attribute ) to absolute column indexes.</p></div>
+<div class="paragraph"><p>For easy reuse of binding information the topic binding can contain a set of <em>entry</em> nodes defining at least one of the attributes of the topic-binding except the schema reference. In this case the attribute values of the <em>topic-binding</em> node are interpreted as default values which can be overwritten by the <em>entry</em> node attributes.</p></div>
+<h3 id="_association_binding">4.2. Association Binding</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>Tag Name:               association-binding
+Child Of:               binding
+Children:               entry*
+Attributes:             schema-ref, sheet?, row?, last-row?, start?, row-boxing?</tt></pre>
+</div></div>
+<div class="paragraph"><p>An association binding is represented by the <em>association-binding</em> XML node and bind a schema definition represented by the <em>schema-ref</em> attribute to a cell region.</p></div>
+<div class="paragraph"><p>The cell region is defined by a set of attributes. The <em>sheet</em> attribute contains the name of the specific Excel sheet to address.
+The <em>row</em> attribute defines the first row of the cell region in the context of the sheet.
+The <em>last-row</em> attribute is optional and defines the last row of the cell region. If the attribute is missing, the value will be the last row of the Excel sheet.
+The <em>start</em> attribute defines the first column of the cell region in the context of the sheet. The attribute value is used translate the relative column values of the schema entry ( <em>column</em> and <em>query</em> attribute ) to absolute column indexes.</p></div>
+<div class="paragraph"><p>For easy reuse of binding information the association binding can contain a set of <em>entry</em> nodes defining at least one of the attributes of the association-binding except the schema reference. In this case the attribute values of the <em>association-binding</em> node are interpreted as default values which can be overwritten by the <em>entry</em> node attributes.</p></div>
+<div class="paragraph"><p>The optional <em>row-boxing</em> attribute allows the definition of multiple-row association instances. Normally an association item will be bound to exact one row of the underlying Excel sheet. If the <em>row-boxing</em> attribute is used, an association can be bound to more than one row statically by a numerical value or dynamically by a function. In this case each role schema entry of the association schema entry can results in more than one role instance.</p></div>
+</div>
+<h2 id="_usage_of_xlsx_integration">5. Usage of Xlsx Integration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Xlsx integration is a special topic map store of the MaJorToM topic maps engine. The application has to specify the topic map store to use by containing them in the classpath.</p></div>
+<h3 id="_defining_the_topic_map_store">5.1. Defining the Topic Map Store</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If the classpath contains more than one Topic Map store implementation of MaJorToM, it is necessary to specify the implementation class of the store to use. There are different possibilities to specify that.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>final String propertyName = TopicMapStoreProperty.TOPICMAPSTORE_CLASS;
+final String className = "de.topicmapslab.majortom.jli.xslx.store.XlsxTopicMapStore";
+TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
+factory.setProperty(propertyName, className);</tt></pre>
+</div></div>
+<div class="exampleblock">
+<div class="exampleblock-content">
+<div class="paragraph"><p>Using the property to specify the topic map store to use.</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
+ITopicMapSystem topicMapSystem = (ITopicMapSystem) factory.newTopicMapSystem();
+XlsxTopicMapStore store = new XlsxTopicMapStore(topicMapSystem);
+TopicMap topicMap = topicMapSystem.createTopicMap("http://psi.example.org/majortom", store);</tt></pre>
+</div></div>
+<div class="exampleblock">
+<div class="exampleblock-content">
+<div class="paragraph"><p>Using the additional method of the topic map system interface of MaJorToM.</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#content of engine.properties
+de.topicmapslab.majortom.topicmapstore.class = de.topicmapslab.majortom.jli.xslx.store.XlsxTopicMapStore</tt></pre>
+</div></div>
+<div class="exampleblock">
+<div class="exampleblock-content">
+<div class="paragraph"><p>Using a property file with the name <em>engine.properties</em> to specify the topic map store to use.</p></div>
+</div></div>
+<div class="paragraph"><p><strong>Please note:</strong> If there are only one implementation located in the classpath, it is not necessary to specify it to use, because the store implementation will be registered automatically by the Java Services or OSGi Framework.</p></div>
+<h3 id="_necessary_properties">5.2. Necessary Properties</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The Xlsx Integration Topic Map Store needs two properties to enable the integration of an Excel document.</p></div>
+<div class="paragraph"><p>The first attribute is the location of the Excel file itself represented by the key <em>de.topicmapslab.majortom.jli.xslx-file-location</em>. The value could be an URL or a file path to the document. The property can also be defined as a part of the mapping definition file.</p></div>
+<div class="paragraph"><p>The second attribute is the location of the mapping file represented by the key <em>jli-mapping-file</em>.  The value could be an URL or a file path to the document.</p></div>
+<div class="paragraph"><p><strong>Please note:</strong> The properties have to be set before the topic map will be created!</p></div>
+<div class="paragraph"><p>There are different ways to specify the properties for the topic map store. The first will be the definition within the <em>engine.properties</em> file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#content of engine.properties
+jli-mapping-file = src/test/resources/samples/sample.xml
+de.topicmapslab.majortom.jli.xslx-file-location = src/test/resources/samples/sample.xlsx</tt></pre>
+</div></div>
+<div class="exampleblock">
+<div class="exampleblock-content">
+<div class="paragraph"><p>Using a property file with the name <em>engine.properties</em> to specify the needed properties.</p></div>
+</div></div>
+<div class="paragraph"><p>A second possibility is the usage of the <em>setProperty</em> method of the topic map store factory.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
+TopicMapSystemFactory factory = TopicMapSystemFactory.newInstance();
+factory.setProperty(IXlsxTopicMapStoreProperty.XSLX_FILE_LOCATION, "src/test/resources/samples/sample.xlsx");
+factory.setProperty(IPropertyKeys.MAPPING_FILE, "src/test/resources/samples/sample.xml");
+ITopicMapSystem topicMapSystem = (ITopicMapSystem) factory.newTopicMapSystem();
+TopicMap topicMap = topicMapSystem.createTopicMap("http://psi.example.org/majortom");</tt></pre>
+</div></div>
+<div class="exampleblock">
+<div class="exampleblock-content">
+<div class="paragraph"><p>Using the <em>setProperty</em> method of the topic map factory.</p></div>
+</div></div>
+<h3 id="_other_properties">5.3. Other Properties</h3><div style="clear:left"></div>
+<div class="tableblock">
+<table rules="all"
+width="75%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="45%" />
+<col width="45%" />
+<col width="9%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>property</strong></p></td>
+<td align="left" valign="top"><p class="table"><strong>meaning</strong></p></td>
+<td align="left" valign="top"><p class="table"><strong>default</strong></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">de.topicmapslab.majortom.jli.xlsx.copy-remote-file</p></td>
+<td align="left" valign="top"><p class="table">property representing the flag indicates the runtime if the remote xlsx file specified by an URL location should be copy as temporary file</p></td>
+<td align="left" valign="top"><p class="table">false</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">de.topicmapslab.majortom.jli.xlsx.convert-to-topicmap</p></td>
+<td align="left" valign="top"><p class="table">property representing the flag indicates the runtime if mapping definition should be used to create a topic map instance instead of using the XLSX file</p></td>
+<td align="left" valign="top"><p class="table">false</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">de.topicmapslab.majortom.jli.xlsx.xlsx.merge-in-as-one-revision</p></td>
+<td align="left" valign="top"><p class="table">property representing the flag indicates if the in memory clone should create one revision for the whole merge in.</p></td>
+<td align="left" valign="top"><p class="table">false</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+ <a href="http://www.topicmapslab.de/"><span style="position: fixed; right: 0px; bottom: 50px; display: block; background: url('http://projects.topicmapslab.de/images/sidelabel_right.png') no-repeat scroll; text-indent: 40000px; width: 24px; height: 181px; z-index: 100001;"> topicmapslab.de </span></a>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2010-11-23 16:17:04 Westeuropäische Sommerzeit
+</div>
+</div>
+</body>
+</html>

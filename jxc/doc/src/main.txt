@@ -1,0 +1,15 @@
+= Java Xlsx Connectivity =
+
+The used trademarks are reserved by their owners.
+The Java Xlsx Connectivity is a document interface to the Microsoft Excel format. The JXC library is designed on top of the Apache POI library.
+JXC defines it own query language similar to SQL but supports the characteristics of the underlying data format.
+
+include::jxc/main.txt[]
+include::exql/main.txt[]
+
+++++++++++++++++++++++++++++++++++++
+<div>
+ <a href="http://www.topicmapslab.de/"><span style="position: fixed; right: 0px; bottom: 50px; display: block; background: url('http://projects.topicmapslab.de/images/sidelabel_right.png') no-repeat scroll; text-indent: 40000px; width: 24px; height: 181px; z-index: 100001;"> topicmapslab.de </span></a>
+</div>
+++++++++++++++++++++++++++++++++++++
+

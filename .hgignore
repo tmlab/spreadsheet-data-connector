@@ -1,0 +1,16 @@
+syntax: glob
+bin
+target
+*.class
+*.log
+*.zip
+*.orig
+build.properties
+engine.properties
+log4j.properties
+doc/javadoc
+**/doc/doc
+**/documentation/doc
+*/\${builder}
+doc/build.properties
+*.xml.versionsBackup

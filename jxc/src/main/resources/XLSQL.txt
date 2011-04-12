@@ -1,0 +1,9 @@
+ query 			::= select-clause from-clause where-clause? 
+ select-clause 	::= 'SELECT' clauselist
+ clause-list 	::= '*' | (<col-id> ( ',' <col-id> )*) 
+ from-clause 	::= 'FROM' <sheetname> 
+ where-clause	::= 'WHERE' condition
+ condition		::= condition ( 'AND'|'OR' ) condition
+ condition		::= <col-id> ('='|'<'|'>'|'>='|'<='|'=~')? (<value>|<col-id>)?
+ 
+   

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Name: JeXc
+Bundle-SymbolicName: de.topicmapslab.jexc;singleton=true
+Bundle-Version: 0.0.1.SNAPSHOT
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Provide-Package: de.topicmapslab.jexc.connection,
+ de.topicmapslab.jexc.exception

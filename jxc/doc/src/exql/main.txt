@@ -1,0 +1,275 @@
+== Excel Query Language ==
+
+The eXql specifies a simple and light-weight query language to access XLSX documents in a simple way. Using a JXC statement the query can be executed directly on the Excel document.
+
+The grammar of the Excel Query Language is quite similar to the synatx of SQL.
+
+=== Value-Expressions ===
+
+==== Grammar ====
+
+------------------------------
+value-expression	::=	cell-access | constant | function | numeric-expression
+cell-access		::= 	'$'[0-9]+ ( cell-value | cell-style | cell-border | cell-address )
+cell-value		::= 	'.value' ( '.' ( 'numerical' | 'string' |'date' ))?
+cell-style		::= 	'.style.' ( 'foreground' | 'background') | '.height' 
+cell-border		::= 	'.border.' ( 'top' | 'left' | 'bottom' | 'right' )
+cell-address		::=	'.address' | '.row' | '.column'
+constant		::=	color-constant | literal
+color-constant		::=	'cell.color.' ( 'RED' | 'GREEN' | 'BLUE' | 'BLACK' )
+literal			::= 	[0-9]+ | "[^"]*" | '[^']*'
+------------------------------
+
+The value-expression used to bound values from the underlying sheet, execute functions or define constants.
+
+To access cell values the variable syntax should be used defining the column index of the cell to access. A variable accessor starts with the token '$' followed by the numerical index of the column. Please note that the index is zero-based and represent as numerical values in contrast to the Excel semantics using alpha-numerical indexes. The accessor works like an object-oriented variable. The dot-operator '.' can be used to access different contents and information of the addressed cell, like its value, address, style-information etc.
+
+*Please note:* The value of a the cell can be extracted in different datatypes ( string, date, numerical and boolean ) using the dot-operator. As default the value will be a string literal.
+
+The 'height' attribute represents the vertical cell-range of the merged -region, the cell is part of. If the cell isn't part of a merged-region the value will be 1.
+
+The 'address' attribute represents the location of the cell represented by the following pattern:
+
+-----------------------------
+sheet-name'/'row-index'/'cell-index
+----------------------------- 
+
+The 'style' attribute can be used to access different style information of the cell, like its foreground or background color.
+
+The 'border' attribute can be used to access the border-width of the cell.
+
+==== Overview ====
+
+[width="75%", cols="1,5"]
+|========
+|*accessor*|*description*
+|value| The string value of the cell.
+|value.string| The string value of the cell.
+|value.date| The date value of the cell. If the value isn't a date an error will be occur.
+|value.numerical|The numerical value of the cell. If the value isn't a number an error will be occur.
+|value.boolean|The boolean value of the cell.
+|address| The location of the cell.
+|height| The vertical number of cells in the merged-region.
+|style.foreground| The foreground color of the cell.
+|style.background| The background color of the cell.
+|border.top| The width of the border on the top of the cell.
+|border.left| The width of the border on the left of the cell.
+|border.right| The width of the border on the right of the cell.
+|border.bottom| The width of the border on the bottom of the cell.
+|========
+
+
+=== Functions ===
+
+Functions can be used to translate the information represented by a cell or check some conditions.
+
+==== Grammar ====
+
+--------------------------
+function	::=		name '(' value-expression ( ',' value-expression )* ')'
+--------------------------
+
+==== The Concat Function ====
+
+--------------------------
+string concat( string... literals )
+--------------------------
+
+The concat function expects at least two string literals and returns a new string literal created using the given ones. The given strings will be concat to each other to create a new string.
+
+-------------------------
+concat ( 'Hallo' , ' ' ,  'Welt' ) --> 'Hallo Welt'
+-------------------------
+
+==== The Hash Function ====
+
+--------------------------
+integer hash( string literal )
+--------------------------
+
+The hash function requires exact one string argument and calculates the hash value of the given string. The calculated hash value will be returned.
+
+==== The Minimum And Maximum Functions ====
+
+--------------------------
+integer min( integer... literal )
+integer max( integer... literal )
+--------------------------
+
+The functions expect at least two numerical literals as constant or sub-expression and return the minimum or maximum of that.
+
+--------------------------
+min( 1, 2 , 3 , 5 )	--> 1
+max( 1, 2 , 3 , 5 )	--> 5
+--------------------------
+
+==== The Next And Previous Functions ====
+
+--------------------------
+integer previous( condition )
+integer next( condition )
+--------------------------
+
+The function can be used to get the next or previous row index starting by the current one satisfying the given condition. The function is useful in context of the group-by-clause.
+
+----------------------
+cell(0,1) 	--> '1'
+cell(1,1) 	--> '2'
+cell(2,1) 	--> '1'
+cell(3,1) 	--> '1'
+
+previous($1.value == 1 ) 	--> [ 2, 0 ]
+next($1.value == 1 ) 		--> [ 2, 3 ]
+----------------------
+
+==== The Tokenize Function ====
+
+------------------------
+string tokenize(string literal, string delimer ( , integer index )? )
+------------------------
+
+The function tokenize the first string argument using the given delimer. The return value will be token at the required position. The position can be defined by the third argument. If the argument is missing the first token will be returned.
+
+-----------------------
+tokenize('Hallo Welt' , ' ' , 2 ) --> 'Welt'
+-----------------------
+
+==== The Trim Function ====
+
+-----------------------
+string trim(string literal)
+-----------------------
+
+The function requires exactly one string literal and removes all white-spaces at the beginning and the end of the string literal. 
+
+------------------------
+trim( '  Hallo Welt   ' ) --> 'Hallo Welt'
+------------------------
+
+==== Overview ====
+
+The number of expected arguments depends on the function itselfs.
+
+[cols="1,2,7"]
+|========
+|*function*|*parameters*|*description*
+|concat| at least two string | Creates a new string by concat the given string literals.
+|hash| a string value | Calculates the hash value of the given string.
+|min| at least two numbers | Returns the minimum of the given numerical values.
+|max| at least two numbers | Returns the maximum of the given numerical values.
+|next| a boolean-expression | Returns the index of the next cell satisfying the given condition.
+|previous| a boolean-expression | Returns the index of the previous cell satisfying the given condition.
+|trim|a string literal|Removes any white-spaces at the beginning and the end of the given string literal.
+|tokenize|two string literals and a number| Tokenize the first string by using the second string as pattern. The number is optional and will be used to returns the string token at the given position.
+|value|two numbers|Returns the string value of the cell with the given row and column index. 
+|========
+
+=== Numerical Expression ===
+
+------------------------------
+numeric-expression	::=	value-expression operator value-expression
+operator:		::=	'+' | '-' | '*' | '/' | '%'
+------------------------------
+
+Numerical expression can be used to execute numerical operations.
+
+The operator '+' calculates the sum of two numbers, concat two strings or calculates the sum of two date values.
+
+The operator '-' calculates the difference of two numbers or date values.
+
+The operator '*' only supports numerical values and calculates the product of them.
+
+The operator '/' calculates the quotient of two numerical values. If the given values are floating point numbers, the returned value will be a floating point number too. If the given values are integer values, the result will be an integer too.
+
+The operator '%' calculates the modulo result of the two numerical values.  
+
+=== Comparison ===
+
+------------------------------
+comparison		::=	value-expression ( '==' | '>=' | '>' | '<=' | '<' | '!=' | '~=' ) value-expression
+------------------------------
+
+The comparison expression can be used as a boolean-primitive. The result of a comparison expression will be 'true' or 'false'. In context of a boolean-primitive the comparison expression expects a collection of row objects and filter them by the comparison condition. The result will be a possible empty collection of row objects.
+
+=== Boolean-Expression ===
+
+------------------------------
+boolean-expression	::=	 '(' boolean-expression ')' | boolean-expression ( 'AND' | 'OR' ) boolean-expression | boolean-primitive
+boolean-primitive	::=	comparison
+------------------------------
+
+Boolean expressions can be used as part of the where-clause and the functions 'next' and 'previous'. Boolean-expressions supports the two boolean operators 'AND' and 'OR'.
+
+=== Select-Clause ===
+
+---------------------------------
+select-clause 		::=	'SELECT' select-part+
+select-part		::= 	value-expression
+---------------------------------
+
+The select-clause is a non-optional part of a eXql query and defines a projection of the selected rows of the where- and from-clause. The select-clause can contain a number of select-parts using value-expressions to extract values from the row objects.
+
+=== From-Clause ===
+
+------------------------------
+form-clause		::=	'FROM' literal '(' [0-9]+ ( 'TO' ( [0-9]+ | 'LAST' ) | ( ',' [0-9]+ )* )?
+------------------------------
+
+The from clause is used to define the sheet and the rows of the sheet to access.  The sheet name will be represented by a string literal following the keyword _FROM_.
+
+The selection range can be defined in two different ways. The query can use the range syntax using the keyword 'TO' to specify only the first and the last row index to select. Please note, that the index are zero-based in different to the Excel semantics. The keyword 'LAST' is reserved as last index which will be bound dynamically to the last row of the underlying sheet. The second possibility to define the indexes to select is a comma-separated list of numerical values which has to contain at least one index.
+
+*Sample*:
+
+------------------------------
+// Select all rows of the underlying sheet named 'sheet'
+... FROM sheet ( 0 TO LAST )
+// Select only the first row of the underlying sheet named 'sheet'	 
+... FROM sheet ( 0 )
+// Select the rows 0,1,2,3,4,5,9 of the underlying sheet named 'sheet'
+... FROM sheet ( 0,1,2,3,4,5,9 )
+------------------------------
+
+=== Where-Clause ===
+
+------------------------------
+where-clause		::=	'WHERE' boolean-expression
+------------------------------
+
+The where-clause is optional and can be used to remove rows from selection which does not satisfy the condition defined by the contained boolean-expression.
+
+=== Group-By-Clause ===
+
+------------------------------
+group-by-expression	::=	'GROUP ' 'BY' value-expression
+------------------------------
+
+The group-by-clause can be used to cluster results of the select clause to groups. The cluster contains a set of tuples of a selection. The number of tuples can be defined by a numerical value or dynamically by a condition returning a numerical value ( like functions ).
+
+=== Overview ===
+
+This chapter contains an overview of the whole grammar of eXql.
+
+----------------------------
+query 			::=	select-clause from-clause where-clause? group-by-clause?
+select-clause 		::=	'SELECT' select-part+
+select-part		::= 	value-expression
+value-expression	::=	cell-access | constant | function | numeric-expression
+cell-access		::= 	'$'[0-9]+ ( cell-value | cell-style | cell-border | cell-address )
+cell-value		::= 	'.value' ( '.' ( 'numerical' | 'string' |'date' ))?
+cell-style		::= 	'.style.' ( 'foreground' | 'background') | '.height' 
+cell-border		::= 	'.border.' ( 'top' | 'left' | 'bottom' | 'right' )
+cell-address		::=	'.address' | '.row' | '.column'
+constant		::=	color-constant | literal
+color-constant		::=	'cell.color.' ( 'RED' | 'GREEN' | 'BLUE' | 'BLACK' )
+literal			::= 	[0-9]+ | "[^"]*" | '[^']*'
+function		::=	... see chapter functions
+numeric-expression	::=	value-expression operator value-expression
+operator:		::=	'+' | '-' | '*' | '/' | '%'
+form-clause		::=	'FROM' literal '(' [0-9]+ ( 'TO' ( [0-9]+ | 'LAST' ) | ( ',' [0-9]+ )* )?
+where-clause		::=	'WHERE' boolean-expression
+boolean-expression	::=	 '(' boolean-expression ')' | boolean-expression ( 'AND' | 'OR' ) boolean-expression | boolean-primitive
+boolean-primitive	::=	comparison
+comparison		::=	value-expression ( '==' | '>=' | '>' | '<=' | '<' | '!=' | '~=' ) value-expression
+group-by-expression	::=	'GROUP ' 'BY' value-expression
+----------------------------
