@@ -3,9 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.topicmapslab</groupId>
 	<artifactId>jeXc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>Java Xlsx Connectivity</name>
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -21,10 +28,6 @@
 		<repository>
 			<id>TML</id>
 			<url>http://maven.topicmapslab.de/public</url>
-		</repository>
-		<repository>
-			<id>TML-Internal</id>
-			<url>http://maven.topicmapslab.de/internal</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -63,9 +66,9 @@
 	</dependencies>
 	<distributionManagement>
 		<repository>
-			<id>topicmapslab-internal</id>
+			<id>topicmapslab-public</id>
 			<name>Topic Maps Lab Repositiory</name>
-			<url>scpexe://atlantis.tm.informatik.uni-leipzig.de/home/maven/webdir/maven.topicmapslab.de/public/internal</url>
+			<url>scp://atlantis.tm.informatik.uni-leipzig.de/disk/localhome/maven/webdir/maven.topicmapslab.de/public/public</url>
 		</repository>
 	</distributionManagement>
 </project>

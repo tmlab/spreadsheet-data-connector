@@ -72,7 +72,7 @@ public class QueryBuilder {
 	 *            the index of row selection
 	 */
 	public QueryBuilder(final String sheetName, final int index) {
-		this(sheetName, (long) index, (long) index);
+		this(sheetName, (long) index, (long) index+1);
 	}
 
 	/**
