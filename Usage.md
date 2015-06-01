@@ -1,0 +1,109 @@
+## Spreadsheet Data Connector ##
+
+The Spreadsheet Data Connector (JXC) is a document interface to the Microsoft(C) Excel(R) format. The JXC library is designed on top of the [Apache POI library](http://poi.apache.org/).
+
+### Establish a new connection ###
+
+The first step to access the underlying document is to establish a new connection instance. The document can be defined by a path to a local file or an URI to a remove file.
+
+```
+String path = "myExcelFile.xlsx";
+JeXcConnection connection = JeXcConnection.openConnection(path);
+```
+
+To execute queries the connection should be used to create a new statement similar to JDBC.
+
+```
+JeXcStatement stmt = connection.createStatement();
+```
+
+### Accessing Cells ###
+
+Additionally to the Apache POI functionality, JXC provides an address object representing a cell object. The application can create a new address object for easy accessing the value of the referenced cell.
+
+```
+/*
+ * create a new address
+ */
+String sheet = "Sheet";
+int row = 0; 		// first row of the sheet
+int column = 0; 	// column 'A' of the document
+JeXcAddress address = new JeXcAddress(mySheet, row, column )
+/*
+ * accessing the string value
+ */
+WorkBook workbook = connection.getWorkbook();
+address.accessStringValue(workbook);
+```
+
+If the cell is part of a merged region of the XLSX document. Apache provides a complicate way to get the range address of the merged region. Using the utility functions of JXC the address range can be extracted in a simple way.
+
+```
+/*
+ * extract the cell range of the containing merged region
+ */
+Cell cell = address.accessCell(workbook);
+CellRangeAddress range = XlsxCellUtils.getCellRange(cell);
+/*
+ * accessing the value of the merged region
+ */
+String value = getCellRangeStringValue(range);
+```
+
+### Querying ###
+
+Using the [Spreadsheet Query Language (eXql)](http://code.google.com/p/spreadsheet-data-connector/wiki/QueryLanguage) the JXC can be used to execute queries on the underlying Excel sheet. The result will be a special object similar to the JDBC result set.
+
+```
+/*
+ * establish connection
+ */
+String path = "myExcelFile.xlsx";
+JeXcConnection connection = JeXcConnection.openConnection(path);
+/*
+ * create statement
+ */
+JeXcStatement stmt = connection.createStatement();
+/*
+ * execute query
+ */
+ExqlResultSetImpl rs = stmt.executeQuery("SELECT $0.value FROM sheet (0 TO LAST)");
+/*
+ * iterate over result set
+ */
+while (rs.next()){
+	String value = rs.getString(0);
+	...
+}
+```
+
+In case the query contains a group-by clause, the result set will be a group-result-set containing a result set for each cluster.
+
+```
+/*
+ * establish connection
+ */
+String path = "myExcelFile.xlsx";
+JeXcConnection connection = JeXcConnection.openConnection(path);
+/*
+ * create statement
+ */
+JeXcStatement stmt = connection.createStatement();
+/*
+ * execute query
+ */
+ExqlGroupResultSetImpl grs = stmt.executeQuery("SELECT $0.value FROM sheet (0 TO LAST) GROUP BY 2");
+/*
+ * iterate over group result set
+ */
+while (grs.next()){
+	ExqlResultSetImpl rs = grs.getResult();	
+	/*
+	 * iterate over result set
+	 */
+	while(rs.next()){
+		String value = rs.getString(0);		
+		...
+	}
+}
+```
